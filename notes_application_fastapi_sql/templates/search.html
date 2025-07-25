@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Search Note</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4" style="background-color: #e1e7cf;">
+  <h2>Search Note by ID</h2> <br>
+  <form id="searchForm" class="mb-4">
+    <input type="number" class="form-control mb-2" id="searchId" placeholder="Enter Note ID"> <br>
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  <div id="noteResult" class="card d-none">
+    <div class="card-body">
+      <h5 class="card-title" id="resultTitle"></h5> <br>
+      <h7 class="card-subtitle mb-2 text-muted" id="resultDesc"></h7> <br><br>
+      <p class="card-text" id="resultContent"></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("searchForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const id = document.getElementById("searchId").value;
+      try {
+        const response = await fetch(`/notes/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          document.getElementById("noteResult").classList.remove("d-none");
+          document.getElementById("resultTitle").textContent = data.title;
+          document.getElementById("resultDesc").textContent = data.description;
+          document.getElementById("resultContent").textContent = data.content;
+        } else {
+          alert("Note not found.");
+        }
+      } catch (err) {
+        alert("Error fetching note.");
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
